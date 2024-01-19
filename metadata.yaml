@@ -1,7 +1,9 @@
-homepage: "https://www.simoahava.com/"
-documentation: "https://www.simoahava.com/custom-templates/eec-products-ga4-items/"
+homepage: "https://github.com/Kittl/eec-products-ga4-items/"
+documentation: https://github.com/Kittl/eec-products-ga4-items/"
 versions:
   # Latest version
+  - sha: 58f5298d8b4746835225d7b7dc8b123c61182110
+    changeNotes: Make code compatible with GTM server-side.
   - sha: bee1adc4bd1cdadcc0828f5ed9625a10595fdce4
     changeNotes: Refactored code to be more error-resilient.
   # Older versions
