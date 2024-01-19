@@ -11,7 +11,6 @@ ___INFO___
 {
   "type": "MACRO",
   "id": "cvt_temp_public_id",
-  "__wm": "VGVtcGxhdGUtQXV0aG9yX2VlYy1wcm9kdWN0cy1nYTQtaXRlbXMtU2ltby1BaGF2YQ\u003d\u003d",
   "categories": [
     "UTILITY",
     "TAG_MANAGEMENT"
@@ -19,9 +18,9 @@ ___INFO___
   "version": 1,
   "securityGroups": [],
   "displayName": "EEC Products -\u003e GA4 Items",
-  "description": "Converts Universal Analytics Enhanced Ecommerce products/impressions/promotions dataLayers to the format required by GA4\u0027s items array.",
+  "description": "Converts Universal Analytics Enhanced Ecommerce products/impressions/promotions dataLayers to the format required by GA4\u0027s items array with server-side GTM support.",
   "containerContexts": [
-    "WEB"
+    "SERVER"
   ]
 }
 
@@ -45,7 +44,6 @@ ___TEMPLATE_PARAMETERS___
           {
             "type": "SELECT",
             "name": "productsVar",
-            "displayName": "",
             "macrosInSelect": true,
             "selectItems": [],
             "simpleValueType": true,
@@ -121,7 +119,7 @@ ___TEMPLATE_PARAMETERS___
               {
                 "type": "NON_EMPTY"
               }
-            ]
+            ],
           }
         ],
         "newRowButtonText": "Add custom dimension map"
@@ -161,9 +159,9 @@ ___TEMPLATE_PARAMETERS___
 ]
 
 
-___SANDBOXED_JS_FOR_WEB_TEMPLATE___
+___SANDBOXED_JS_FOR_SERVER___
 
-const copyFromDataLayer = require('copyFromDataLayer');
+const copyFromDataLayer = require('getEventData');
 const getType = require('getType');
 const makeNumber = require('makeNumber');
 const makeTableMap = require('makeTableMap');
@@ -305,13 +303,13 @@ if (data.option === 'promotions') {
 }
 
 
-___WEB_PERMISSIONS___
+___SERVER_PERMISSIONS___
 
 [
   {
     "instance": {
       "key": {
-        "publicId": "read_data_layer",
+        "publicId": "read_event_data",
         "versionId": "1"
       },
       "param": [
@@ -325,6 +323,13 @@ ___WEB_PERMISSIONS___
                 "string": "ecommerce"
               }
             ]
+          }
+        },
+        {
+          "key": "eventDataAccess",
+          "value": {
+            "type": 1,
+            "string": "specific"
           }
         }
       ]
@@ -369,7 +374,7 @@ scenarios:
     assertThat(variableResult).isEqualTo(expected.promotions);
 - name: Read ecommerce_impressions dataLayer correctly
   code: |-
-    mock('copyFromDataLayer', (n, v) => {
+    mock('getEventData', (n, v) => {
       assertThat(v).isEqualTo(1);
       return {impressions: mockData.impressionsVar};
     });
@@ -381,7 +386,7 @@ scenarios:
     assertThat(variableResult).isEqualTo(expected.impressions);
 - name: Read ecommerce_promoView dataLayer correctly
   code: |-
-    mock('copyFromDataLayer', (n, v) => {
+    mock('getEventData', (n, v) => {
       assertThat(v).isEqualTo(1);
       return {promoView: {promotions: mockData.promotionsVar}};
     });
@@ -393,7 +398,7 @@ scenarios:
     assertThat(variableResult).isEqualTo(expected.promotions);
 - name: Read ecommerce_checkout dataLayer correctly
   code: |-
-    mock('copyFromDataLayer', (n, v) => {
+    mock('getEventData', (n, v) => {
       assertThat(v).isEqualTo(1);
       return {checkout: {products: mockData.productsVar}};
     });
@@ -578,6 +583,4 @@ setup: |-
 
 ___NOTES___
 
-Created on 17/10/2020, 22:54:27
-
-
+Created on 19/01/2024, 18:25:51
